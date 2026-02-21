@@ -1,36 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
-    <radialGradient id="glow" cx="75%" cy="50%" r="55%">
-      <stop offset="0%" stop-color="#1a1a2e" stop-opacity="1"/>
+    <radialGradient id="glow" cx="70%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1c1207" stop-opacity="1"/>
       <stop offset="100%" stop-color="#000000" stop-opacity="1"/>
     </radialGradient>
+    <!-- subtle grid -->
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M 80 0 L 0 0 0 80" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+    </pattern>
   </defs>
 
   <!-- Background -->
   <rect width="1200" height="630" fill="#000000"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
 
-  <!-- Decorative rings (top right) -->
-  <circle cx="1050" cy="315" r="260" fill="none" stroke="white" stroke-opacity="0.04" stroke-width="1"/>
-  <circle cx="1050" cy="315" r="360" fill="none" stroke="white" stroke-opacity="0.025" stroke-width="1"/>
-  <circle cx="1050" cy="315" r="460" fill="none" stroke="white" stroke-opacity="0.015" stroke-width="1"/>
+  <!-- Decorative rings -->
+  <circle cx="1060" cy="315" r="240" fill="none" stroke="rgba(245,158,11,0.06)" stroke-width="1"/>
+  <circle cx="1060" cy="315" r="340" fill="none" stroke="rgba(245,158,11,0.035)" stroke-width="1"/>
+  <circle cx="1060" cy="315" r="450" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
 
-  <!-- Logo icon: white circle with black diamond -->
-  <circle cx="80" cy="70" r="24" fill="white"/>
-  <rect x="69" y="59" width="22" height="22" rx="2.5" fill="black" transform="rotate(45 80 70)"/>
+  <!-- Logo icon: amber circle with black diamond -->
+  <circle cx="80" cy="70" r="24" fill="#f59e0b"/>
+  <rect x="69" y="59" width="22" height="22" rx="2" fill="black" transform="rotate(45 80 70)"/>
 
   <!-- Logo text -->
-  <text x="116" y="80" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="28" fill="white" letter-spacing="-1">AI.AGENCY</text>
+  <text x="116" y="80" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="28" fill="white" letter-spacing="-1">EMBERTREE</text>
 
   <!-- Headline - italic serif -->
-  <text x="80" y="300" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="92" fill="white" fill-opacity="0.88">magic websites</text>
+  <text x="80" y="300" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="90" fill="white" fill-opacity="0.88">magic websites</text>
 
   <!-- Headline - bold uppercase -->
-  <text x="80" y="408" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="96" fill="white" letter-spacing="-4">BUILT FAST</text>
+  <text x="80" y="410" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="96" fill="white" letter-spacing="-4">BUILT FAST</text>
 
   <!-- Tagline -->
-  <text x="80" y="498" font-family="Arial, sans-serif" font-size="22" fill="white" fill-opacity="0.38">We use the blend of smart technologies to create the websites of your dreams</text>
+  <text x="80" y="500" font-family="Arial, sans-serif" font-size="22" fill="white" fill-opacity="0.38">We blend cutting-edge technology with design savviness to craft the websites of your dreams</text>
 
-  <!-- Bottom rule -->
-  <rect x="80" y="540" width="120" height="2" rx="1" fill="white" fill-opacity="0.15"/>
+  <!-- Bottom accent rule — amber -->
+  <rect x="80" y="542" width="100" height="2" rx="1" fill="#f59e0b" fill-opacity="0.6"/>
+
+  <!-- Tech readout -->
+  <text x="80" y="580" font-family="Courier New, monospace" font-size="13" fill="white" fill-opacity="0.2" letter-spacing="2">SYS // v2.4.1 — 847 SITES LIVE</text>
 </svg>
