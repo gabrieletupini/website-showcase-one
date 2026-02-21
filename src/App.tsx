@@ -141,7 +141,7 @@ export default function App() {
         >
           <h1 className="text-6xl md:text-8xl lg:text-[9.5rem] font-black leading-[0.82] tracking-tight mb-3 uppercase drop-shadow-2xl">
             <span className="font-serif italic font-normal block lowercase mb-2 text-[0.95em] opacity-90">
-              premium websites
+              elite websites
             </span>
             <span className="block">built fast</span>
           </h1>
@@ -178,22 +178,30 @@ export default function App() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </motion.a>
           </div>
-        </motion.div>
 
-        {/* Jordan Peterson quote — bottom left */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.4, duration: 1 }}
-          className="absolute bottom-14 left-0 max-w-xs hidden lg:block select-none"
-        >
-          <p className="font-serif italic text-sm text-white/30 leading-relaxed">
-            "Making something beautiful is difficult,<br />
-            but it is amazingly worthwhile."
-          </p>
-          <span className="text-[11px] font-mono text-white/18 tracking-widest mt-1.5 block">
-            — Jordan Peterson
-          </span>
+          {/* Peterson quote — centered, in flow */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.9 }}
+            className="mt-14 flex flex-col items-center text-center max-w-sm relative select-none"
+          >
+            {/* Big decorative " */}
+            <span className="absolute -top-6 font-serif text-[7rem] leading-none text-white/[0.04] pointer-events-none">
+              "
+            </span>
+            <p className="font-serif italic text-sm md:text-base text-white/35 leading-relaxed relative z-10">
+              Making something beautiful is difficult,<br />
+              but it is amazingly worthwhile.
+            </p>
+            <div className="flex items-center gap-3 mt-3.5">
+              <div className="h-px w-6 bg-white/15" />
+              <span className="text-[10px] font-mono text-white/22 tracking-[0.22em] uppercase">
+                Jordan Peterson
+              </span>
+              <div className="h-px w-6 bg-white/15" />
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Scroll indicator */}
