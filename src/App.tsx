@@ -141,7 +141,7 @@ export default function App() {
         >
           <h1 className="text-6xl md:text-8xl lg:text-[9.5rem] font-black leading-[0.82] tracking-tight mb-3 uppercase drop-shadow-2xl">
             <span className="font-serif italic font-normal block lowercase mb-2 text-[0.95em] opacity-90">
-              magic websites
+              premium websites
             </span>
             <span className="block">built fast</span>
           </h1>

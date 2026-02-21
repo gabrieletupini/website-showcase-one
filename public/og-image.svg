@@ -28,7 +28,7 @@
   <text x="116" y="80" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="28" fill="white" letter-spacing="-1">EMBERTREE</text>
 
   <!-- Headline - italic serif -->
-  <text x="80" y="300" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="90" fill="white" fill-opacity="0.88">magic websites</text>
+  <text x="80" y="300" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="90" fill="white" fill-opacity="0.88">premium websites</text>
 
   <!-- Headline - bold uppercase -->
   <text x="80" y="410" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="96" fill="white" letter-spacing="-4">BUILT FAST</text>
