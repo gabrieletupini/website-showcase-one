@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Globe, ShieldCheck, Zap, Layout } from "lucide-react";
+import Wizard from "./Wizard";
 
 const features = [
   { icon: Globe, label: "Happy Humans Everywhere" },
@@ -9,12 +11,17 @@ const features = [
 ];
 
 export default function App() {
+  const [showWizard, setShowWizard] = useState(false);
+
+  if (showWizard) {
+    return <Wizard onBack={() => setShowWizard(false)} />;
+  }
+
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-x-hidden relative flex flex-col">
 
       {/* ── Background ───────────────────────────────────────── */}
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Video — high opacity, let it breathe */}
         <video
           autoPlay
           muted
@@ -29,7 +36,7 @@ export default function App() {
           />
         </video>
 
-        {/* Tech grid — sits on top of video */}
+        {/* Tech grid */}
         <div
           className="absolute inset-0 z-[2] pointer-events-none"
           style={{
@@ -38,7 +45,7 @@ export default function App() {
           }}
         />
 
-        {/* Minimal edge vignettes — only top + bottom, very light */}
+        {/* Minimal top/bottom vignette */}
         <div className="absolute inset-0 z-[3] bg-gradient-to-b from-black/45 via-transparent to-black/75 pointer-events-none" />
       </div>
 
@@ -49,7 +56,6 @@ export default function App() {
         transition={{ duration: 0.55, ease: "easeOut" }}
         className="relative z-20 flex items-center justify-between px-6 py-6 md:px-12 max-w-7xl mx-auto w-full"
       >
-        {/* Logo */}
         <a href="https://embertree.io" className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-full flex items-center justify-center bg-amber-400 shadow-lg shadow-amber-500/30 group-hover:shadow-amber-400/50 transition-shadow">
             <div className="w-4 h-4 bg-black rounded-sm rotate-45" />
@@ -57,7 +63,6 @@ export default function App() {
           <span className="font-black text-xl tracking-tighter uppercase">EmberTree</span>
         </a>
 
-        {/* Links */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
           {[
             { label: "Build site", href: "https://app.embertree.io/new" },
@@ -78,7 +83,6 @@ export default function App() {
           ))}
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-3">
           <a
             href="https://app.embertree.io/login"
@@ -109,11 +113,6 @@ export default function App() {
           </span>
         </div>
 
-        {/* Tech readout — bottom left */}
-        <div className="absolute bottom-12 left-0 hidden md:block font-mono text-[10px] text-white/20 tracking-widest select-none">
-          45.4654°N 9.1866°E // UTC+01:00
-        </div>
-
         {/* Corner brackets */}
         <div className="absolute inset-x-0 inset-y-0 pointer-events-none hidden md:block">
           <div className="absolute top-0 left-0 w-6 h-6 border-l border-t border-white/10" />
@@ -130,7 +129,7 @@ export default function App() {
           className="mb-8 inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/10 bg-black/30 backdrop-blur-sm text-xs font-mono tracking-widest text-white/50"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse flex-shrink-0" />
-          // fully operational — new site in under 30 min
+          // fully operational
         </motion.div>
 
         {/* Headline */}
@@ -140,25 +139,26 @@ export default function App() {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           className="flex flex-col items-center"
         >
-          <h1 className="text-6xl md:text-8xl lg:text-[9.5rem] font-black leading-[0.82] tracking-tight mb-6 uppercase drop-shadow-2xl">
+          <h1 className="text-6xl md:text-8xl lg:text-[9.5rem] font-black leading-[0.82] tracking-tight mb-3 uppercase drop-shadow-2xl">
             <span className="font-serif italic font-normal block lowercase mb-2 text-[0.95em] opacity-90">
               magic websites
             </span>
             <span className="block">built fast</span>
           </h1>
 
-          <p className="text-sm md:text-base opacity-55 max-w-md leading-relaxed mb-10 font-medium mt-3 tracking-wide drop-shadow-lg">
+          {/* Italic subtitle — right under the headline */}
+          <p className="font-serif italic text-lg md:text-2xl opacity-55 max-w-xl leading-snug mb-10 tracking-wide">
             we blend cutting-edge technology with design savviness to craft
             the websites of your dreams
           </p>
 
           {/* CTAs */}
           <div className="flex flex-wrap justify-center gap-3">
-            <motion.a
-              href="https://app.embertree.io/new"
+            <motion.button
+              onClick={() => setShowWizard(true)}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
-              className="group relative px-8 py-4 bg-white text-black font-bold rounded-full flex items-center gap-2.5 text-sm uppercase tracking-tight overflow-hidden shadow-2xl shadow-white/25"
+              className="group relative px-8 py-4 bg-white text-black font-bold rounded-full flex items-center gap-2.5 text-sm uppercase tracking-tight overflow-hidden shadow-2xl shadow-white/25 cursor-pointer"
             >
               <span
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
@@ -166,7 +166,7 @@ export default function App() {
               />
               <span className="relative">create my site</span>
               <Zap className="relative w-4 h-4 fill-current group-hover:scale-110 transition-transform" />
-            </motion.a>
+            </motion.button>
 
             <motion.a
               href="https://embertree.io/showcase"
@@ -178,6 +178,22 @@ export default function App() {
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
             </motion.a>
           </div>
+        </motion.div>
+
+        {/* Jordan Peterson quote — bottom left */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 1 }}
+          className="absolute bottom-14 left-0 max-w-xs hidden lg:block select-none"
+        >
+          <p className="font-serif italic text-sm text-white/30 leading-relaxed">
+            "Making something beautiful is difficult,<br />
+            but it is amazingly worthwhile."
+          </p>
+          <span className="text-[11px] font-mono text-white/18 tracking-widest mt-1.5 block">
+            — Jordan Peterson
+          </span>
         </motion.div>
 
         {/* Scroll indicator */}
