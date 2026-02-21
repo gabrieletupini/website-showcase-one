@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowLeft, Send, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Send, CheckCircle2, Loader2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_SERVICE  = "service_zgf03ey";
+const EMAILJS_TEMPLATE = "template_7r3r8rd";
+const EMAILJS_PUBLIC_KEY = "d09HeaQfradvNnLgt";
 
 interface FormData {
   siteType: string;
@@ -83,6 +88,8 @@ export default function Wizard({ onBack }: WizardProps) {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState<FormData>({
     siteType: "",
     industry: "",
@@ -112,25 +119,42 @@ export default function Wizard({ onBack }: WizardProps) {
     setStep((s) => s - 1);
   }
 
-  function handleSend() {
-    const subject = encodeURIComponent(
-      `Website Request — ${form.name || "Anonymous"}`
-    );
-    const body = encodeURIComponent(
-      [
-        `Hi EmberTree,\n`,
-        `I'd like to build a new website.\n`,
-        `Site type: ${form.siteType}`,
-        `Industry: ${form.industry}`,
-        `Budget: ${form.budget}`,
-        `\nName: ${form.name}`,
-        `Email: ${form.email}`,
-        form.message ? `\nMessage:\n${form.message}` : "",
-        `\n\nBest,\n${form.name}`,
-      ].join("\n")
-    );
-    window.location.href = `mailto:hello@embertree.io?subject=${subject}&body=${body}`;
-    setSent(true);
+  async function handleSend() {
+    if (sending) return;
+    setSending(true);
+    setError("");
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE,
+        EMAILJS_TEMPLATE,
+        {
+          from_name:      form.name,
+          from_email:     form.email,
+          reply_to:       form.email,
+          to_name:        "Gabriele",
+          subject:        `Website Request — ${form.name}`,
+          user_name:      form.name,
+          user_email:     form.email,
+          user_site_type: form.siteType,
+          user_industry:  form.industry,
+          user_budget:    form.budget,
+          user_message:   form.message || "—",
+          message: `New site request from ${form.name} (${form.email})
+
+Site type: ${form.siteType}
+Industry:  ${form.industry}
+Budget:    ${form.budget}
+
+${form.message ? `Message:\n${form.message}` : "No additional message."}`,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+      setSent(true);
+    } catch {
+      setError("Something went wrong — please try again or email us directly.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -390,16 +414,29 @@ export default function Wizard({ onBack }: WizardProps) {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={handleSend}
-                  disabled={!form.name || !form.email}
+                  disabled={!form.name || !form.email || sending}
                   className="group mt-6 px-8 py-4 bg-white text-black font-bold rounded-full flex items-center gap-2.5 text-sm uppercase tracking-tight shadow-xl shadow-white/20 hover:bg-amber-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed relative overflow-hidden"
                 >
                   <span
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"
                     aria-hidden
                   />
-                  <span className="relative">Send request</span>
-                  <Send className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  {sending ? (
+                    <>
+                      <span className="relative">Sending…</span>
+                      <Loader2 className="relative w-4 h-4 animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      <span className="relative">Send request</span>
+                      <Send className="relative w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                    </>
+                  )}
                 </motion.button>
+
+                {error && (
+                  <p className="mt-4 text-xs text-red-400/80 font-mono">{error}</p>
+                )}
               </div>
             )}
 
@@ -418,8 +455,7 @@ export default function Wizard({ onBack }: WizardProps) {
                   Request sent!
                 </h2>
                 <p className="text-sm text-white/40 max-w-sm leading-relaxed mb-10">
-                  Your email client should be opening. We'll review your
-                  request and get back to you within 24 hours.
+                  Got it! We'll review your request and get back to you within 24 hours.
                 </p>
                 <button
                   onClick={onBack}
