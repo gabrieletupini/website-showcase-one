@@ -78,7 +78,7 @@ export default function About({ onBack, onStartProject }: AboutProps) {
             {/* Photo */}
             <div className="relative rounded-2xl overflow-hidden aspect-[3/4] w-full max-w-sm mx-auto lg:mx-0">
               <img
-                src="/gabriele.jpg"
+                src={`${import.meta.env.BASE_URL}gabriele.jpg`}
                 alt="Gabriele Tupini"
                 className="w-full h-full object-cover object-center"
               />
