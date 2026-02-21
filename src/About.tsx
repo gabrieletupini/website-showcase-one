@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ArrowLeft, Mail, Linkedin, Github, Zap } from "lucide-react";
+import { ArrowLeft, Linkedin, Github, Zap } from "lucide-react";
 
 interface AboutProps {
   onBack: () => void;
@@ -96,14 +96,7 @@ export default function About({ onBack, onStartProject }: AboutProps) {
             {/* Social links */}
             <div className="flex items-center gap-3 flex-wrap">
               <a
-                href="mailto:gabrieletupini@gmail.com"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15] transition-all text-xs font-mono text-white/40 hover:text-white"
-              >
-                <Mail className="w-3.5 h-3.5" />
-                Email
-              </a>
-              <a
-                href="https://linkedin.com/in/gabriele-tupini"
+                href="https://www.linkedin.com/in/gabriele-tupini-76610a16b/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15] transition-all text-xs font-mono text-white/40 hover:text-white"
@@ -112,7 +105,7 @@ export default function About({ onBack, onStartProject }: AboutProps) {
                 LinkedIn
               </a>
               <a
-                href="https://github.com/gabriele-tupini"
+                href="https://github.com/gabrieletupini"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] hover:border-white/[0.15] transition-all text-xs font-mono text-white/40 hover:text-white"
