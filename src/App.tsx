@@ -68,7 +68,7 @@ export default function App() {
             { label: "Build site", href: "https://app.embertree.io/new" },
             { label: "Pricing", href: "https://embertree.io/pricing" },
             { label: "FAQ", href: "https://embertree.io/faq" },
-            { label: "Showcase", href: "https://embertree.io/showcase" },
+            { label: "Showcase", href: "#showcase" },
           ].map(({ label, href }, i) => (
             <motion.a
               key={label}
@@ -215,6 +215,176 @@ export default function App() {
           <div className="w-px h-8 bg-gradient-to-b from-white/80 to-transparent" />
         </motion.div>
       </main>
+
+      {/* ── Showcase ─────────────────────────────────────────── */}
+      <section
+        id="showcase"
+        className="relative z-10 bg-black px-6 md:px-12 py-20 md:py-28 border-t border-white/[0.06] scroll-mt-24"
+      >
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12"
+          >
+            <p className="font-mono text-xs text-amber-400/70 tracking-widest uppercase mb-3">
+              // our work
+            </p>
+            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-[0.88]">
+              Showcase
+            </h2>
+          </motion.div>
+
+          {/* Fing card */}
+          <motion.a
+            href="https://www.fing.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="group block rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-white/[0.16] transition-all duration-500 overflow-hidden"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[440px]">
+
+              {/* Left: project info */}
+              <div className="p-8 md:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-white/[0.06]">
+                <div>
+                  <div className="flex items-center gap-3 mb-5">
+                    <span className="text-3xl font-black tracking-tight">Fing</span>
+                    <span className="px-2.5 py-0.5 text-[11px] font-mono bg-emerald-400/10 border border-emerald-400/20 rounded-full text-emerald-400/80 tracking-widest uppercase">
+                      Live
+                    </span>
+                  </div>
+
+                  <p className="text-white/40 text-sm md:text-base leading-relaxed mb-8 max-w-sm">
+                    The world's #1 network scanner — device discovery and
+                    security monitoring trusted by professionals and families
+                    worldwide.
+                  </p>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-3 gap-6 mb-8">
+                    {[
+                      { value: "30M+", label: "Users" },
+                      { value: "15M", label: "Monthly scans" },
+                      { value: "450k", label: "Device models" },
+                    ].map(({ value, label }) => (
+                      <div key={label}>
+                        <div className="text-2xl md:text-3xl font-black tracking-tight">
+                          {value}
+                        </div>
+                        <div className="text-[10px] text-white/28 uppercase tracking-widest mt-0.5 font-mono">
+                          {label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Network Security",
+                      "Consumer App",
+                      "B2C / B2B",
+                      "iOS · Android · Desktop",
+                    ].map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 text-[11px] font-mono text-white/28 border border-white/[0.07] rounded-full uppercase tracking-wider"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Visit link */}
+                <div className="flex items-center gap-2 mt-10 text-sm font-bold uppercase tracking-tight text-white/35 group-hover:text-white transition-colors duration-300">
+                  <span>Visit fing.com</span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </div>
+              </div>
+
+              {/* Right: browser mockup */}
+              <div className="relative overflow-hidden bg-[#05090f] flex flex-col">
+                {/* Browser chrome */}
+                <div className="px-4 py-3 bg-black/50 border-b border-white/[0.06] flex items-center gap-3 flex-shrink-0">
+                  <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-white/10" />
+                  </div>
+                  <div className="flex-1 bg-white/[0.05] rounded-full px-3 py-1 text-[11px] text-white/25 font-mono">
+                    fing.com
+                  </div>
+                </div>
+
+                {/* Fing site preview */}
+                <div className="relative flex-1 flex flex-col items-center justify-center px-8 py-10 overflow-hidden">
+                  {/* Radial glow */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "radial-gradient(ellipse at 50% 45%, rgba(37,99,235,0.18) 0%, transparent 70%)",
+                    }}
+                  />
+
+                  {/* Network graph SVG */}
+                  <svg
+                    className="absolute inset-0 w-full h-full"
+                    viewBox="0 0 480 380"
+                    preserveAspectRatio="xMidYMid slice"
+                  >
+                    {/* Edges */}
+                    <line x1="240" y1="185" x2="110" y2="95"  stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.25" />
+                    <line x1="240" y1="185" x2="370" y2="105" stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.25" />
+                    <line x1="240" y1="185" x2="90"  y2="265" stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.2"  />
+                    <line x1="240" y1="185" x2="390" y2="270" stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.2"  />
+                    <line x1="240" y1="185" x2="200" y2="320" stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.18" />
+                    <line x1="240" y1="185" x2="420" y2="185" stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.2"  />
+                    <line x1="240" y1="185" x2="60"  y2="175" stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.18" />
+                    <line x1="240" y1="185" x2="260" y2="55"  stroke="#3b82f6" strokeWidth="0.7" strokeOpacity="0.2"  />
+                    <line x1="110" y1="95"  x2="370" y2="105" stroke="#60a5fa" strokeWidth="0.5" strokeOpacity="0.1"  />
+                    <line x1="90"  y1="265" x2="200" y2="320" stroke="#60a5fa" strokeWidth="0.5" strokeOpacity="0.1"  />
+                    {/* Outer nodes */}
+                    <circle cx="110" cy="95"  r="4"  fill="#60a5fa" fillOpacity="0.55" />
+                    <circle cx="370" cy="105" r="3.5" fill="#34d399" fillOpacity="0.5"  />
+                    <circle cx="90"  cy="265" r="5"  fill="#60a5fa" fillOpacity="0.45" />
+                    <circle cx="390" cy="270" r="3.5" fill="#60a5fa" fillOpacity="0.4"  />
+                    <circle cx="200" cy="320" r="3"  fill="#34d399" fillOpacity="0.4"  />
+                    <circle cx="420" cy="185" r="4"  fill="#60a5fa" fillOpacity="0.45" />
+                    <circle cx="60"  cy="175" r="3.5" fill="#34d399" fillOpacity="0.4"  />
+                    <circle cx="260" cy="55"  r="4"  fill="#60a5fa" fillOpacity="0.45" />
+                    {/* Center node + pulse ring */}
+                    <circle cx="240" cy="185" r="22" fill="#2563eb" fillOpacity="0.08" />
+                    <circle cx="240" cy="185" r="10" fill="#3b82f6" fillOpacity="0.85" />
+                  </svg>
+
+                  {/* Content */}
+                  <div className="relative z-10 text-center">
+                    <div className="text-4xl font-black tracking-[-2px] mb-1 text-white">
+                      FING
+                    </div>
+                    <div className="text-[11px] font-medium text-white/35 mb-7 tracking-widest uppercase">
+                      Manage your network like a pro
+                    </div>
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/15 border border-blue-500/25 text-blue-300/80 text-xs font-mono">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                      14 devices found on network
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.a>
+        </div>
+      </section>
 
       {/* ── Footer features ──────────────────────────────────── */}
       <footer className="relative z-10 border-t border-white/[0.08] py-10 px-6 md:px-12 bg-gradient-to-t from-black via-black/70 to-transparent">
