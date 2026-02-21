@@ -1,17 +1,12 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Globe, ShieldCheck, Zap, Layout } from "lucide-react";
+import { ArrowRight, Zap } from "lucide-react";
 import Wizard from "./Wizard";
 import Showcase from "./Showcase";
+import About from "./About";
 
-type Page = "home" | "wizard" | "showcase";
+type Page = "home" | "wizard" | "showcase" | "about";
 
-const features = [
-  { icon: Globe, label: "Happy Humans Everywhere" },
-  { icon: ShieldCheck, label: "Super Safe & Secure" },
-  { icon: Zap, label: "Fast Like a Rocket" },
-  { icon: Layout, label: "Lots of Cool Choices" },
-];
 
 export default function App() {
   const [page, setPage] = useState<Page>("home");
@@ -22,6 +17,14 @@ export default function App() {
   if (page === "showcase")
     return (
       <Showcase
+        onBack={() => setPage("home")}
+        onStartProject={() => setPage("wizard")}
+      />
+    );
+
+  if (page === "about")
+    return (
+      <About
         onBack={() => setPage("home")}
         onStartProject={() => setPage("wizard")}
       />
@@ -71,10 +74,9 @@ export default function App() {
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
           {[
-            { label: "Build site",  onClick: () => setPage("wizard") },
-            { label: "Pricing",     onClick: () => window.open("https://embertree.io/pricing", "_blank") },
-            { label: "FAQ",         onClick: () => window.open("https://embertree.io/faq", "_blank") },
-            { label: "Showcase",    onClick: () => setPage("showcase") },
+            { label: "Build site", onClick: () => setPage("wizard") },
+            { label: "Showcase",   onClick: () => setPage("showcase") },
+            { label: "About",      onClick: () => setPage("about") },
           ].map(({ label, onClick }, i) => (
             <motion.button
               key={label}
@@ -89,22 +91,14 @@ export default function App() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
-          <a
-            href="https://app.embertree.io/login"
-            className="px-4 py-2 text-sm font-medium opacity-55 hover:opacity-100 transition-opacity"
-          >
-            Sign in
-          </a>
-          <motion.button
-            onClick={() => setPage("wizard")}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg shadow-white/10 hover:bg-amber-50 transition-colors"
-          >
-            Get started
-          </motion.button>
-        </div>
+        <motion.button
+          onClick={() => setPage("wizard")}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
+          className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg shadow-white/10 hover:bg-amber-50 transition-colors"
+        >
+          Get started
+        </motion.button>
       </motion.nav>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -220,25 +214,6 @@ export default function App() {
         </motion.div>
       </main>
 
-      {/* ── Footer features ──────────────────────────────────── */}
-      <footer className="relative z-10 border-t border-white/[0.08] py-10 px-6 md:px-12 bg-gradient-to-t from-black via-black/70 to-transparent">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3">
-          {features.map(({ icon: Icon, label }, i) => (
-            <motion.div
-              key={label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 + i * 0.09, duration: 0.45, ease: "easeOut" }}
-              className="group flex items-center gap-3 p-4 rounded-xl border border-white/[0.07] bg-black/25 backdrop-blur-sm hover:bg-white/[0.08] hover:border-white/[0.15] transition-all duration-300 cursor-default"
-            >
-              <Icon className="w-4 h-4 opacity-40 group-hover:opacity-90 group-hover:text-amber-300 transition-all flex-shrink-0" />
-              <span className="text-[11px] font-semibold uppercase tracking-wider opacity-40 group-hover:opacity-90 transition-opacity leading-tight">
-                {label}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </footer>
     </div>
   );
 }
