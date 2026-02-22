@@ -41,7 +41,6 @@ export default function App() {
           loop
           playsInline
           className="w-full h-full object-cover opacity-85 scale-[1.03]"
-          poster="https://picsum.photos/seed/agency/1920/1080?blur=10"
         >
           <source
             src="https://d8j0ntlcm91z4.cloudfront.net/user_39zUbVmLqmft5amKgUX0QZgzwwF/hf_20260221_185928_ce2b8644-e189-418f-80f1-855fc0b70007.mp4"
