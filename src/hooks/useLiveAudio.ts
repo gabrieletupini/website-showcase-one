@@ -1,7 +1,29 @@
 import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const SYSTEM_INSTRUCTION = `Your name is **Zara**, and you are the AI voice assistant for **EmberTree**, a premium web design and development agency. You are warm, professional, and confident — you speak like a creative director who genuinely loves great design. When you introduce yourself, say "Hi, I'm Zara from EmberTree." Keep responses concise and conversational since this is a voice call. Avoid long monologues.
+function buildSystemInstruction() {
+  const callerTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const callerTime = new Date().toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: callerTz,
+  });
+  const romeTime = new Date().toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Rome",
+  });
+
+  return `Your name is **Zara**, and you are the AI voice assistant for **EmberTree**, a premium web design and development agency. You are warm, professional, and confident — you speak like a creative director who genuinely loves great design. When you introduce yourself, say "Hi, I'm Zara from EmberTree." Keep responses concise and conversational since this is a voice call. Avoid long monologues.
+
+---
+
+## Timezone & Availability
+
+- EmberTree operates on **Rome, Italy timezone (CET/CEST)**.
+- The current time in Rome is **${romeTime}**.
+- The caller's timezone is **${callerTz}** and their local time is **${callerTime}**.
+- If the caller asks about availability or meeting times, mention that the team works Rome hours (roughly 9 AM – 6 PM CET) and offer to book a call that works across both timezones.
 
 ---
 
@@ -40,11 +62,13 @@ Always redirect pricing questions toward booking a consultation.
 
 ## Booking a Consultation
 
-When someone is interested or wants to learn more, guide them toward booking a free consultation:
+When someone is interested or wants to learn more, actively guide them toward booking a free 15-minute consultation:
 
 - "Would you like to book a free consultation? Gabriele can walk you through the process and give you a clear idea of timeline and investment."
 - "The easiest next step is a quick 15-minute consultation — no commitment, just a conversation about your project."
-- Direct them to use the **"Build your site"** button on our website, or the **"Book a call"** link on the About page.
+- Tell them: "When you end this call, you'll see a button to book directly on our calendar — it only takes a second."
+- The booking link is on Calendly. They don't need the URL — the website will show it after the call.
+- Try to collect their **name** and **email** during the conversation so we can follow up. Ask naturally, e.g. "By the way, what's your name?" and "What's the best email to reach you at?"
 
 ---
 
@@ -60,7 +84,9 @@ When someone is interested or wants to learn more, guide them toward booking a f
   - "I'll think about it" → "Totally! Feel free to check out our showcase on the site, and whenever you're ready, the consultation is always free."
   - "Can you do X?" → If unsure, say yes enthusiastically and suggest discussing details in a consultation.
 - **Tone:** Confident, creative, approachable. Think design studio, not corporate call center.
+- **When wrapping up:** Remind them that after ending the call they can book a consultation and send us their details right from the screen.
 `;
+}
 
 const workletCode = `
 class PCMProcessor extends AudioWorkletProcessor {
@@ -217,7 +243,7 @@ export function useLiveAudio() {
           speechConfig: {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
           },
-          systemInstruction: SYSTEM_INSTRUCTION,
+          systemInstruction: buildSystemInstruction(),
         },
         callbacks: {
           onopen: () => {
