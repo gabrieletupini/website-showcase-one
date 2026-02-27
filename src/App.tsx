@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight, Zap, Mic } from "lucide-react";
 import Wizard from "./Wizard";
 import Showcase from "./Showcase";
 import About from "./About";
+import VoiceAgent from "./VoiceAgent";
 
-type Page = "home" | "wizard" | "showcase" | "about";
+type Page = "home" | "wizard" | "showcase" | "about" | "voice";
 
 
 export default function App() {
@@ -29,6 +30,9 @@ export default function App() {
         onStartProject={() => setPage("wizard")}
       />
     );
+
+  if (page === "voice")
+    return <VoiceAgent onBack={() => setPage("home")} />;
 
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-x-hidden relative flex flex-col">
@@ -90,14 +94,28 @@ export default function App() {
           ))}
         </div>
 
-        <motion.button
-          onClick={() => setPage("wizard")}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-          className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg shadow-white/10 hover:bg-amber-50 transition-colors"
-        >
-          Get started
-        </motion.button>
+        <div className="flex items-center gap-3">
+          <motion.button
+            onClick={() => setPage("voice")}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="w-10 h-10 rounded-full border border-amber-400/30 bg-amber-400/10 flex items-center justify-center hover:bg-amber-400/20 transition-colors"
+            title="Talk to us"
+          >
+            <Mic className="w-4 h-4 text-amber-400" />
+          </motion.button>
+          <motion.button
+            onClick={() => setPage("wizard")}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg shadow-white/10 hover:bg-amber-50 transition-colors"
+          >
+            Get started
+          </motion.button>
+        </div>
       </motion.nav>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
