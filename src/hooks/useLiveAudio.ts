@@ -105,14 +105,14 @@ Use \`get_available_slots\` to look up open time slots. Ask the caller when they
 ### Step 2: Book the slot
 Once the caller picks a time, use \`book_consultation\` with their name, email, and the chosen time slot. This will show a **confirmation card on their screen** with the booking details.
 
-**IMPORTANT — Before calling the function, warn the caller:**
-"Alright, I'm about to put the booking details on your screen so you can double-check everything — especially your email since I wrote it down from what you said. If you have a popup blocker, you might need to allow it. Ready?"
+**Before calling the function, briefly warn the caller:**
+"Alright, I'm putting the booking details on your screen now — just double-check everything looks right, especially your email, and tap Confirm."
 
-Then call the function. After calling it, say:
-"There it is! Take a look at the details on your screen — make sure your name and email are spelled correctly, and if everything looks good, just tap Confirm."
+Then call the function. **After calling it, say NOTHING — just wait silently.** The system will automatically confirm the booking when they tap Confirm, and you will receive a success or failure response.
 
-- If they confirm: "Awesome, you're all set! You'll get a confirmation email shortly. Gabriele is looking forward to chatting with you!"
-- If they want to change something: "No problem, just edit it right there on the card and hit Confirm when you're happy with it."
+- **If the response says success:** Say enthusiastically: "You're all set! You'll get a confirmation email shortly. Gabriele is looking forward to chatting with you! Is there anything else I can help you with?"
+- **If the response says failure or cancelled:** Say: "No worries! Would you like to try a different time, or is there anything else I can help with?"
+- **Do NOT** repeat "check your details" or "make sure everything looks good" after the function is called — the card on screen already handles that.
 
 ### Important notes:
 - **Always gather name and email before booking.**
@@ -261,6 +261,10 @@ export function useLiveAudio({ onBookConfirm }: UseLiveAudioOptions = {}) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
+
+  // Use ref to avoid stale closure in Gemini session callbacks
+  const onBookConfirmRef = useRef(onBookConfirm);
+  onBookConfirmRef.current = onBookConfirm;
 
   const sessionRef = useRef<any>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -544,8 +548,8 @@ export function useLiveAudio({ onBookConfirm }: UseLiveAudioOptions = {}) {
                     });
                   };
 
-                  if (onBookConfirm) {
-                    onBookConfirm(bookingData, respondToGemini);
+                  if (onBookConfirmRef.current) {
+                    onBookConfirmRef.current(bookingData, respondToGemini);
                   } else {
                     // No UI handler — try booking directly
                     try {
