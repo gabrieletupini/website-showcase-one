@@ -217,18 +217,27 @@ export default function App() {
         </motion.div>
       </main>
 
-      {/* ── Floating voice call button ─────────────────────── */}
+      {/* ── Floating Zara voice CTA ──────────────────────── */}
       <motion.button
         onClick={() => setPage("voice")}
-        initial={{ opacity: 0, scale: 0.8, y: 20 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3 rounded-full bg-amber-400 text-black font-bold text-sm uppercase tracking-tight shadow-2xl shadow-amber-400/30 hover:shadow-amber-400/50 transition-shadow cursor-pointer"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-4 pl-5 pr-6 py-4 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 text-black shadow-2xl shadow-amber-400/25 hover:shadow-amber-400/40 transition-shadow cursor-pointer max-w-xs"
       >
-        <Mic className="w-4 h-4" />
-        Talk to us
+        <div className="w-11 h-11 rounded-full bg-black/15 flex items-center justify-center flex-shrink-0">
+          <Mic className="w-5 h-5" />
+        </div>
+        <div className="text-left">
+          <div className="font-black text-sm uppercase tracking-tight leading-tight">
+            Talk to Zara
+          </div>
+          <div className="text-[11px] text-black/60 font-medium leading-snug mt-0.5">
+            Our AI assistant — ask about services, pricing & more
+          </div>
+        </div>
       </motion.button>
 
     </div>

@@ -60,13 +60,13 @@ export default function VoiceAgent({ onBack }: VoiceAgentProps) {
           </p>
 
           <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tight leading-[0.88] mb-3">
-            Talk to
+            Meet
             <br />
-            EmberTree
+            Zara
           </h2>
           <p className="text-sm text-white/30 max-w-sm mb-12">
-            Ask about our services, our process, or book a free consultation —
-            all by voice.
+            Our trained AI assistant — she'll walk you through our services,
+            answer your questions, and help you book a consultation.
           </p>
 
           {/* Orb */}
