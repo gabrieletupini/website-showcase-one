@@ -42,6 +42,7 @@ jobs:
         run: npm run build
         env:
           VITE_BASE_PATH: /website-showcase-one/
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
