@@ -1,5 +1,9 @@
-import { GoogleGenAI, LiveServerMessage, Modality } from "@google/genai";
+import { GoogleGenAI, LiveServerMessage, Modality, Type } from "@google/genai";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+const CAL_USERNAME = "gabriele-tupini-da60rn";
+const CAL_EVENT_SLUG = "15min";
+const CAL_API_BASE = "https://api.cal.com/v2";
 
 function buildSystemInstruction() {
   const callerTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -13,8 +17,9 @@ function buildSystemInstruction() {
     minute: "2-digit",
     timeZone: "Europe/Rome",
   });
+  const todayDate = new Date().toISOString().split("T")[0];
 
-  return `Your name is **Zara**, and you are the AI voice assistant for **EmberTree**, a premium web design and development agency. You are warm, professional, and confident — you speak like a creative director who genuinely loves great design. When you introduce yourself, say "Hi, I'm Zara from EmberTree." Keep responses concise and conversational since this is a voice call. Avoid long monologues.
+  return `Your name is **Sara**, and you are the AI voice assistant for **EmberTree**, a premium web design and development agency. You are warm, professional, and confident — you speak like a creative director who genuinely loves great design. When you introduce yourself, say "Hi, I'm Sara from EmberTree." Keep responses concise and conversational since this is a voice call. Avoid long monologues.
 
 ---
 
@@ -23,6 +28,7 @@ function buildSystemInstruction() {
 - EmberTree operates on **Rome, Italy timezone (CET/CEST)**.
 - The current time in Rome is **${romeTime}**.
 - The caller's timezone is **${callerTz}** and their local time is **${callerTime}**.
+- Today's date is **${todayDate}**.
 - If the caller asks about availability or meeting times, mention that the team works Rome hours (roughly 9 AM – 6 PM CET) and offer to book a call that works across both timezones.
 
 ---
@@ -71,19 +77,31 @@ Before offering to book a consultation, naturally gather these details during th
 5. **Budget range** — Do NOT ask directly. If they bring it up, redirect to the consultation. If they seem price-sensitive, reassure them: "We work with a range of budgets."
 6. **Email** — "What's the best email to reach you at, in case we get disconnected?" (ask before booking)
 
-Once you have at least their name, what they need, and their email, suggest booking a consultation. Summarize what you've learned: "So you're looking for [X] for your [Y] business — Gabriele would love to chat with you about that. Want me to open the booking page?"
+Once you have at least their name, what they need, and their email, suggest booking a consultation.
 
 ---
 
 ## Booking a Consultation
 
-You have the ability to **directly open the booking page** for the caller using the \`book_consultation\` function. Use it when the caller agrees to book.
+You can **book a consultation directly for the caller** — no forms, no links, everything happens through this voice call. You have two tools:
 
-- When they're interested: "Would you like me to open our booking page right now? You can pick a time that works for you."
-- If they say yes: Call the \`book_consultation\` function, then say something like "Perfect, I've just opened our booking page for you — you should see it in a new tab. Just pick a 15-minute slot that works for you."
-- If they're not ready yet: "No worries at all! When you're ready, just say 'book a call' and I'll open it right up."
-- The booking is a free 15-minute consultation with Gabriele — no commitment.
-- **Note:** Calendly automatically shows only available time slots, so you don't need to check for existing appointments — it's handled.
+### Step 1: Check available slots
+Use \`get_available_slots\` to look up open time slots. Ask the caller when they'd prefer to meet (e.g. "Do you prefer this week or next week? Morning or afternoon?"), then call the function with the appropriate date range.
+
+- Present 3–5 good options to the caller in their local time.
+- Example: "I've got a few great options for you. How about Tuesday at 10 AM, Wednesday at 2 PM, or Thursday at 11 AM — your time?"
+
+### Step 2: Book the slot
+Once the caller picks a time, use \`book_consultation\` with their name, email, the chosen time slot, and their timezone. This will show a quick confirmation card on their screen with the booking details — they can verify everything looks right and tap Confirm.
+
+- After calling it, say: "Perfect! I've just put that on the screen for you — just double-check the details and hit Confirm, and you're all set!"
+- If they confirm: "Awesome, you'll get a confirmation email shortly. Gabriele is looking forward to chatting with you!"
+
+### Important notes:
+- **Always gather name and email before booking.**
+- The consultation is **free, 15 minutes** with Gabriele — no commitment.
+- If the caller changes their mind about the time, just check slots again and rebook.
+- If something goes wrong technically, say: "Hmm, looks like something went wrong on my end. No worries — you can also book directly at cal.com/gabriele-tupini-da60rn/15min, or I can have Gabriele reach out to you by email."
 
 ---
 
@@ -101,6 +119,67 @@ You have the ability to **directly open the booking page** for the caller using 
 - **Tone:** Confident, creative, approachable. Think design studio, not corporate call center.
 - **When wrapping up:** Summarize what you discussed and remind them that after ending the call they can also send their details from the screen.
 `;
+}
+
+async function fetchAvailableSlots(
+  startDate: string,
+  endDate: string,
+  timeZone: string
+) {
+  const params = new URLSearchParams({
+    eventTypeSlug: CAL_EVENT_SLUG,
+    "usernameList[]": CAL_USERNAME,
+    start: startDate,
+    end: endDate,
+    timeZone,
+  });
+
+  const res = await fetch(`${CAL_API_BASE}/slots/available?${params}`, {
+    headers: {
+      "cal-api-version": "2024-09-04",
+      Authorization: `Bearer ${process.env.CAL_API_KEY}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Cal.com slots error: ${res.status}`);
+  }
+
+  const json = await res.json();
+  return json.data; // { "2026-03-03": [{ start: "..." }, ...], ... }
+}
+
+async function createBooking(
+  startTime: string,
+  attendeeName: string,
+  attendeeEmail: string,
+  attendeeTimeZone: string
+) {
+  const res = await fetch(`${CAL_API_BASE}/bookings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "cal-api-version": "2024-08-13",
+      Authorization: `Bearer ${process.env.CAL_API_KEY}`,
+    },
+    body: JSON.stringify({
+      start: startTime,
+      eventTypeSlug: CAL_EVENT_SLUG,
+      username: CAL_USERNAME,
+      attendee: {
+        name: attendeeName,
+        email: attendeeEmail,
+        timeZone: attendeeTimeZone,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Cal.com booking error: ${res.status} — ${text}`);
+  }
+
+  return await res.json();
 }
 
 const workletCode = `
@@ -145,11 +224,21 @@ function base64Encode(buffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-interface UseLiveAudioOptions {
-  onBooking?: () => void;
+export interface BookingData {
+  name: string;
+  email: string;
+  startTime: string;
+  timezone: string;
 }
 
-export function useLiveAudio({ onBooking }: UseLiveAudioOptions = {}) {
+interface UseLiveAudioOptions {
+  onBookConfirm?: (
+    data: BookingData,
+    respond: (result: { success: boolean; message: string }) => void
+  ) => void;
+}
+
+export function useLiveAudio({ onBookConfirm }: UseLiveAudioOptions = {}) {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -227,6 +316,7 @@ export function useLiveAudio({ onBooking }: UseLiveAudioOptions = {}) {
       setIsConnecting(true);
       setError(null);
 
+      const callerTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
       playbackContextRef.current = new AudioContext({ sampleRate: 24000 });
@@ -267,9 +357,53 @@ export function useLiveAudio({ onBooking }: UseLiveAudioOptions = {}) {
             {
               functionDeclarations: [
                 {
+                  name: "get_available_slots",
+                  description:
+                    "Check available consultation time slots for a given date range. Call this when the caller wants to book and you need to offer them specific times.",
+                  parameters: {
+                    type: Type.OBJECT,
+                    properties: {
+                      start_date: {
+                        type: Type.STRING,
+                        description:
+                          "Start date in YYYY-MM-DD format (e.g. 2026-03-03)",
+                      },
+                      end_date: {
+                        type: Type.STRING,
+                        description:
+                          "End date in YYYY-MM-DD format, max 7 days from start",
+                      },
+                    },
+                    required: ["start_date", "end_date"],
+                  },
+                },
+                {
                   name: "book_consultation",
                   description:
-                    "Opens the Calendly booking page so the caller can schedule a free 15-minute consultation with Gabriele. Call this when the user agrees to book a call.",
+                    "Book a specific consultation time slot. Shows a confirmation card on the caller's screen for them to verify and confirm. Call this after the caller picks a time from the available slots.",
+                  parameters: {
+                    type: Type.OBJECT,
+                    properties: {
+                      caller_name: {
+                        type: Type.STRING,
+                        description: "The caller's full name",
+                      },
+                      caller_email: {
+                        type: Type.STRING,
+                        description: "The caller's email address",
+                      },
+                      start_time: {
+                        type: Type.STRING,
+                        description:
+                          "The selected slot start time in ISO 8601 format (must be one of the times returned by get_available_slots)",
+                      },
+                    },
+                    required: [
+                      "caller_name",
+                      "caller_email",
+                      "start_time",
+                    ],
+                  },
                 },
               ],
             },
@@ -300,23 +434,120 @@ export function useLiveAudio({ onBooking }: UseLiveAudioOptions = {}) {
             const toolCall = (message as any).toolCall;
             if (toolCall?.functionCalls) {
               for (const fc of toolCall.functionCalls) {
-                if (fc.name === "book_consultation") {
-                  onBooking?.();
-                  // Respond to Gemini so it knows the action succeeded
-                  const session = await sessionPromise;
-                  session.sendToolResponse({
-                    functionResponses: [
-                      {
-                        id: fc.id,
-                        name: fc.name,
-                        response: {
-                          success: true,
-                          message:
-                            "The Calendly booking page has been opened in a new tab for the user.",
+                // ── Get available slots ──
+                if (fc.name === "get_available_slots") {
+                  const args = fc.args || {};
+                  try {
+                    const slots = await fetchAvailableSlots(
+                      args.start_date,
+                      args.end_date,
+                      callerTz
+                    );
+
+                    // Format slots nicely for Sara to read out
+                    const formatted: Record<string, string[]> = {};
+                    for (const [date, times] of Object.entries(
+                      slots as Record<string, { start: string }[]>
+                    )) {
+                      const d = new Date(date + "T12:00:00Z");
+                      const label = d.toLocaleDateString("en-US", {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "UTC",
+                      });
+                      formatted[label] = times.map((t) => {
+                        const dt = new Date(t.start);
+                        return dt.toLocaleTimeString("en-US", {
+                          hour: "numeric",
+                          minute: "2-digit",
+                          timeZone: callerTz,
+                        });
+                      });
+                    }
+
+                    const session = await sessionPromise;
+                    session.sendToolResponse({
+                      functionResponses: [
+                        {
+                          id: fc.id,
+                          name: fc.name,
+                          response: {
+                            available_slots: formatted,
+                            timezone: callerTz,
+                            raw_slots: slots,
+                          },
                         },
-                      },
-                    ],
-                  });
+                      ],
+                    });
+                  } catch (err: any) {
+                    console.error("Failed to fetch slots:", err);
+                    const session = await sessionPromise;
+                    session.sendToolResponse({
+                      functionResponses: [
+                        {
+                          id: fc.id,
+                          name: fc.name,
+                          response: {
+                            error:
+                              "Failed to fetch available slots. Suggest the caller visit cal.com/gabriele-tupini-da60rn/15min directly.",
+                          },
+                        },
+                      ],
+                    });
+                  }
+                }
+
+                // ── Book consultation ──
+                if (fc.name === "book_consultation") {
+                  const args = fc.args || {};
+                  const bookingData: BookingData = {
+                    name: args.caller_name || "",
+                    email: args.caller_email || "",
+                    startTime: args.start_time || "",
+                    timezone: callerTz,
+                  };
+
+                  // Delegate to UI for confirmation — pass a respond callback
+                  // that sends the tool response back to Gemini
+                  const respondToGemini = async (result: {
+                    success: boolean;
+                    message: string;
+                  }) => {
+                    const session = await sessionPromise;
+                    session.sendToolResponse({
+                      functionResponses: [
+                        {
+                          id: fc.id,
+                          name: fc.name,
+                          response: result,
+                        },
+                      ],
+                    });
+                  };
+
+                  if (onBookConfirm) {
+                    onBookConfirm(bookingData, respondToGemini);
+                  } else {
+                    // No UI handler — try booking directly
+                    try {
+                      await createBooking(
+                        bookingData.startTime,
+                        bookingData.name,
+                        bookingData.email,
+                        bookingData.timezone
+                      );
+                      await respondToGemini({
+                        success: true,
+                        message: "Booking confirmed!",
+                      });
+                    } catch (err: any) {
+                      await respondToGemini({
+                        success: false,
+                        message: err.message,
+                      });
+                    }
+                  }
                 }
               }
               return;
@@ -393,3 +624,5 @@ export function useLiveAudio({ onBooking }: UseLiveAudioOptions = {}) {
     disconnect,
   };
 }
+
+export { createBooking };

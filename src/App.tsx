@@ -217,7 +217,7 @@ export default function App() {
         </motion.div>
       </main>
 
-      {/* ── Floating Zara voice CTA ──────────────────────── */}
+      {/* ── Floating Sara voice CTA ──────────────────────── */}
       <motion.button
         onClick={() => setPage("voice")}
         initial={{ opacity: 0, y: 30 }}
@@ -232,7 +232,7 @@ export default function App() {
         </div>
         <div className="text-left">
           <div className="font-black text-sm uppercase tracking-tight leading-tight">
-            Talk to Zara
+            Talk to Sara
           </div>
           <div className="text-[11px] text-black/60 font-medium leading-snug mt-0.5">
             Our AI assistant — ask about services, pricing & more
