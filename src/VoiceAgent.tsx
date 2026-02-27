@@ -26,7 +26,11 @@ interface VoiceAgentProps {
 
 export default function VoiceAgent({ onBack }: VoiceAgentProps) {
   const { isConnected, isConnecting, isSpeaking, error, connect, disconnect } =
-    useLiveAudio();
+    useLiveAudio({
+      onBooking: () => {
+        window.open(CALENDLY_URL, "_blank", "noopener,noreferrer");
+      },
+    });
 
   const [callEnded, setCallEnded] = useState(false);
   const [summaryName, setSummaryName] = useState("");

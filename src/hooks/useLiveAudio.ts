@@ -62,12 +62,12 @@ Always redirect pricing questions toward booking a consultation.
 
 ## Booking a Consultation
 
-When someone is interested or wants to learn more, actively guide them toward booking a free 15-minute consultation:
+You have the ability to **directly open the booking page** for the caller using the \`book_consultation\` function. Use it when the caller agrees to book.
 
-- "Would you like to book a free consultation? Gabriele can walk you through the process and give you a clear idea of timeline and investment."
-- "The easiest next step is a quick 15-minute consultation — no commitment, just a conversation about your project."
-- Tell them: "When you end this call, you'll see a button to book directly on our calendar — it only takes a second."
-- The booking link is on Calendly. They don't need the URL — the website will show it after the call.
+- When they're interested: "Would you like me to open our booking page right now? You can pick a time that works for you."
+- If they say yes: Call the \`book_consultation\` function, then say something like "Perfect, I've just opened our booking page for you — you should see it in a new tab. Just pick a 15-minute slot that works for you."
+- If they're not ready yet: "No worries at all! When you're ready, just say 'book a call' and I'll open it right up."
+- The booking is a free 15-minute consultation with Gabriele — no commitment.
 - Try to collect their **name** and **email** during the conversation so we can follow up. Ask naturally, e.g. "By the way, what's your name?" and "What's the best email to reach you at?"
 
 ---
@@ -130,7 +130,11 @@ function base64Encode(buffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-export function useLiveAudio() {
+interface UseLiveAudioOptions {
+  onBooking?: () => void;
+}
+
+export function useLiveAudio({ onBooking }: UseLiveAudioOptions = {}) {
   const [isConnected, setIsConnected] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -244,6 +248,17 @@ export function useLiveAudio() {
             voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
           },
           systemInstruction: buildSystemInstruction(),
+          tools: [
+            {
+              functionDeclarations: [
+                {
+                  name: "book_consultation",
+                  description:
+                    "Opens the Calendly booking page so the caller can schedule a free 15-minute consultation with Gabriele. Call this when the user agrees to book a call.",
+                },
+              ],
+            },
+          ],
         },
         callbacks: {
           onopen: () => {
@@ -266,6 +281,32 @@ export function useLiveAudio() {
             };
           },
           onmessage: async (message: LiveServerMessage) => {
+            // Handle function calls
+            const toolCall = (message as any).toolCall;
+            if (toolCall?.functionCalls) {
+              for (const fc of toolCall.functionCalls) {
+                if (fc.name === "book_consultation") {
+                  onBooking?.();
+                  // Respond to Gemini so it knows the action succeeded
+                  const session = await sessionPromise;
+                  session.sendToolResponse({
+                    functionResponses: [
+                      {
+                        id: fc.id,
+                        name: fc.name,
+                        response: {
+                          success: true,
+                          message:
+                            "The Calendly booking page has been opened in a new tab for the user.",
+                        },
+                      },
+                    ],
+                  });
+                }
+              }
+              return;
+            }
+
             const base64Audio =
               message.serverContent?.modelTurn?.parts[0]?.inlineData?.data;
             if (base64Audio) {
