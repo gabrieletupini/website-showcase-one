@@ -94,28 +94,14 @@ export default function App() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
-          <motion.button
-            onClick={() => setPage("voice")}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="w-10 h-10 rounded-full border border-amber-400/30 bg-amber-400/10 flex items-center justify-center hover:bg-amber-400/20 transition-colors"
-            title="Talk to us"
-          >
-            <Mic className="w-4 h-4 text-amber-400" />
-          </motion.button>
-          <motion.button
-            onClick={() => setPage("wizard")}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg shadow-white/10 hover:bg-amber-50 transition-colors"
-          >
-            Get started
-          </motion.button>
-        </div>
+        <motion.button
+          onClick={() => setPage("wizard")}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
+          className="px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full shadow-lg shadow-white/10 hover:bg-amber-50 transition-colors"
+        >
+          Get started
+        </motion.button>
       </motion.nav>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
@@ -230,6 +216,20 @@ export default function App() {
           <div className="w-px h-8 bg-gradient-to-b from-white/80 to-transparent" />
         </motion.div>
       </main>
+
+      {/* ── Floating voice call button ─────────────────────── */}
+      <motion.button
+        onClick={() => setPage("voice")}
+        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-5 py-3 rounded-full bg-amber-400 text-black font-bold text-sm uppercase tracking-tight shadow-2xl shadow-amber-400/30 hover:shadow-amber-400/50 transition-shadow cursor-pointer"
+      >
+        <Mic className="w-4 h-4" />
+        Talk to us
+      </motion.button>
 
     </div>
   );
