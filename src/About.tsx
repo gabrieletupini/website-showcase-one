@@ -46,7 +46,7 @@ export default function About({ onBack, onStartProject }: AboutProps) {
             <div className="w-3.5 h-3.5 bg-black rounded-sm rotate-45" />
           </div>
           <span className="font-black text-base tracking-tighter uppercase opacity-60 group-hover:opacity-100 transition-opacity">
-            EmberTree
+            Tektree
           </span>
         </button>
 

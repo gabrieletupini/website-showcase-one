@@ -178,12 +178,12 @@ ${form.message ? `Message:\n${form.message}` : "No additional message."}`,
           {step === 1 ? "Back to home" : "Back"}
         </button>
 
-        <a href="https://embertree.io" className="flex items-center gap-2">
+        <a href="https://tektree.com" className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-amber-400 flex items-center justify-center">
             <div className="w-3 h-3 bg-black rounded-sm rotate-45" />
           </div>
           <span className="font-black text-sm tracking-tighter uppercase opacity-50">
-            EmberTree
+            Tektree
           </span>
         </a>
 

@@ -25,7 +25,7 @@
   <rect x="69" y="59" width="22" height="22" rx="2" fill="black" transform="rotate(45 80 70)"/>
 
   <!-- Logo text -->
-  <text x="116" y="80" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="28" fill="white" letter-spacing="-1">EMBERTREE</text>
+  <text x="116" y="80" font-family="Arial Black, Arial, sans-serif" font-weight="900" font-size="28" fill="white" letter-spacing="-1">TEKTREE</text>
 
   <!-- Headline - italic serif -->
   <text x="80" y="300" font-family="Georgia, Times New Roman, serif" font-style="italic" font-size="90" fill="white" fill-opacity="0.88">elite websites</text>

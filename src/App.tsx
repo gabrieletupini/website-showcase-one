@@ -68,11 +68,11 @@ export default function App() {
         transition={{ duration: 0.55, ease: "easeOut" }}
         className="relative z-20 flex items-center justify-between px-6 py-6 md:px-12 max-w-7xl mx-auto w-full"
       >
-        <a href="https://embertree.io" className="flex items-center gap-2.5 group">
+        <a href="https://tektree.com" className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 rounded-full flex items-center justify-center bg-amber-400 shadow-lg shadow-amber-500/30 group-hover:shadow-amber-400/50 transition-shadow">
             <div className="w-4 h-4 bg-black rounded-sm rotate-45" />
           </div>
-          <span className="font-black text-xl tracking-tighter uppercase">EmberTree</span>
+          <span className="font-black text-xl tracking-tighter uppercase">Tektree</span>
         </a>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium">
